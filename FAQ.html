@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교육청 노트북 꿀팁 & FAQ 포털</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        /* Custom Scrollbar for Dark Theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo / Title -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="filterByCategory('all')">
+                <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-lg shadow-indigo-600/30">
+                    <i class="fa-solid fa-laptop-code text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold text-slate-100 leading-tight">교육청 노트북 스마트 포털</h1>
+                    <p class="text-xs text-slate-400 font-medium">학생을 위한 실사용 꿀팁 모음</p>
+                </div>
+            </div>
+
+            <!-- Right Controls (User Auth / Discord) -->
+            <div class="flex items-center space-x-3">
+                <a href="https://discord.gg/Z8gTrs2Cyy" target="_blank" rel="noopener noreferrer" 
+                   class="inline-flex items-center space-x-2 bg-[#5865F2] hover:bg-[#4752C4] text-white px-3.5 py-2 rounded-lg font-medium text-sm transition-colors shadow-sm">
+                    <i class="fa-brands fa-discord text-lg"></i>
+                    <span class="hidden sm:inline">디스코드 커뮤니티</span>
+                </a>
+                
+                <div id="user-info-bar" class="flex items-center space-x-2">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+        <!-- Hero Banner -->
+        <div class="bg-gradient-to-r from-indigo-900 via-slate-900 to-purple-950 rounded-2xl p-6 sm:p-8 text-white shadow-2xl mb-8 relative overflow-hidden border border-slate-800">
+            <div class="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-10">
+                <i class="fa-solid fa-laptop text-[220px]"></i>
+            </div>
+            <div class="relative z-10 max-w-2xl">
+                <h2 class="text-2xl sm:text-4xl font-extrabold mt-1 mb-2 leading-snug">교육청 노트북 FAQ</h2>
+                <p class="text-slate-300 text-sm sm:text-base mb-6 opacity-90">자주 묻는 질문 검색부터 미답변 질문 작성, 맞춤형 팁까지 한곳에서 확인하세요.</p>
+                
+                <!-- Search Box -->
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                    <input type="text" id="search-input" onkeyup="handleSearch()"
+                           placeholder="검색어를 입력하세요 (예: Wi-Fi 연결, 비밀번호 초기화, 프로그램 설치...)"
+                           class="w-full pl-12 pr-4 py-3.5 rounded-xl bg-slate-900/90 text-slate-100 placeholder-slate-500 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-xl text-sm sm:text-base font-medium">
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Actions Bar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <!-- Category Tabs -->
+            <div class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none" id="category-buttons">
+                <button onclick="filterByCategory('all')" class="cat-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap shadow-sm transition-all" data-cat="all">전체보기</button>
+                <button onclick="filterByCategory('app_install')" class="cat-btn bg-slate-900 hover:bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-800 whitespace-nowrap transition-all" data-cat="app_install">앱 설치</button>
+                <button onclick="filterByCategory('boancare')" class="cat-btn bg-slate-900 hover:bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-800 whitespace-nowrap transition-all" data-cat="boancare">PCBoanCare</button>
+                <button onclick="filterByCategory('computer_use')" class="cat-btn bg-slate-900 hover:bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-800 whitespace-nowrap transition-all" data-cat="computer_use">컴퓨터 사용</button>
+                <button onclick="filterByCategory('program')" class="cat-btn bg-slate-900 hover:bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-800 whitespace-nowrap transition-all" data-cat="program">프로그램</button>
+                <button onclick="filterByCategory('etc')" class="cat-btn bg-slate-900 hover:bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-800 whitespace-nowrap transition-all" data-cat="etc">기타</button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center space-x-2 shrink-0">
+                <button onclick="handleQuestionButtonClick()" class="flex-1 md:flex-none inline-flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-md">
+                    <i class="fa-solid fa-pen"></i>
+                    <span>질문 남기기</span>
+                </button>
+                <button id="admin-members-btn" onclick="openModal('members-modal')" class="hidden inline-flex items-center justify-center space-x-2 bg-purple-700 hover:bg-purple-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-md border border-purple-600">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>회원 관리</span>
+                </button>
+                <button id="admin-add-faq-btn" onclick="openModal('add-faq-modal')" class="hidden inline-flex items-center justify-center space-x-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-md border border-slate-700">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>FAQ 추가</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Inline Ad Banner Area -->
+        <div class="bg-gradient-to-r from-amber-500/10 via-slate-900 to-indigo-500/10 border border-amber-500/20 rounded-xl p-4 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-500/30 uppercase tracking-wider shrink-0">AD / 스폰서</span>
+                <p class="text-xs sm:text-sm text-slate-300">
+                    <strong class="text-amber-300 font-semibold">[광고]</strong> 스마트 교실 필수품! 무선 포인터 & 교육용 디바이스 최저가 기획전
+                </p>
+            </div>
+            <a href="#" onclick="showToast('스폰서 관련 링크로 이동합니다.'); return false;" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition-colors whitespace-nowrap shrink-0">
+                자세히 보기 <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
+            </a>
+        </div>
+
+        <!-- Section Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- FAQ List (2 Cols) -->
+            <div class="lg:col-span-2 space-y-4" id="faq-list">
+                <!-- Dynamic FAQ cards rendered by JS -->
+                <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 text-center text-slate-400">
+                    <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-indigo-400"></i>
+                    <p>데이터베이스 연결 중...</p>
+                </div>
+            </div>
+
+            <!-- Sidebar / Pending Questions & Discord Box & Side Ads -->
+            <div class="space-y-6">
+                <!-- Pending Questions List -->
+                <div class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-lg">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                        <h3 class="font-bold text-slate-100 flex items-center space-x-2">
+                            <i class="fa-solid fa-clock-rotate-left text-amber-400"></i>
+                            <span>답변 대기 중인 질문</span>
+                        </h3>
+                        <span id="pending-count" class="bg-amber-500/20 text-amber-300 text-xs font-semibold px-2 py-0.5 rounded-full border border-amber-500/30">0</span>
+                    </div>
+                    <div id="pending-list" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+                        <p class="text-xs text-slate-500 text-center py-4">등록된 대기 질문이 없습니다.</p>
+                    </div>
+                </div>
+
+                <!-- Community Help Widget -->
+                <div class="bg-indigo-950/40 rounded-xl border border-indigo-900/60 p-5">
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-indigo-600 text-white p-2.5 rounded-lg shrink-0">
+                            <i class="fa-brands fa-discord text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-indigo-200 text-sm">실시간 지원 디스코드</h4>
+                            <p class="text-xs text-indigo-300/80 mt-1 leading-relaxed">
+                                포털 답변으로 해결되지 않는 복잡한 문제는 디스코드 커뮤니티에서 실시간 문의 및 조치를 받을 수 있습니다.
+                            </p>
+                            <a href="https://discord.gg/Z8gTrs2Cyy" target="_blank" rel="noopener noreferrer" 
+                               class="inline-block mt-3 text-xs font-bold text-indigo-400 hover:text-indigo-300 underline">
+                                디스코드 참여하기 <i class="fa-solid fa-arrow-right ml-0.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Display Ad Container -->
+                <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 text-center">
+                    <span class="text-[10px] text-slate-500 uppercase tracking-widest block mb-2">SPONSORED AD</span>
+                    <div class="bg-slate-950 rounded-lg p-6 border border-slate-800 flex flex-col items-center justify-center space-y-2 min-h-[200px]">
+                        <i class="fa-solid fa-rectangle-ad text-3xl text-slate-600"></i>
+                        <p class="text-xs text-slate-400 font-medium">수익 창출용 디스플레이 광고 영역</p>
+                        <span class="text-[10px] text-slate-600">(Google AdSense / 쿠팡 파트너스 연동 가능)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-slate-500 text-center">
+            <p>&copy; Justin. All rights reserved.</p>
+            <div class="flex items-center space-x-4">
+                <a href="https://discord.com/users/1461722202817826898" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition-colors flex items-center space-x-1.5">
+                    <i class="fa-brands fa-discord text-base"></i>
+                    <span>Discord</span>
+                </a>
+                <a href="https://github.com/justin-0603" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition-colors flex items-center space-x-1.5">
+                    <i class="fa-brands fa-github text-base"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+
+    <!-- Pending Question Detail / Answer Modal (관리자 답변 작성 및 개별 확인용) -->
+    <div id="pending-detail-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('pending-detail-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-xl p-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center space-x-2 mb-3">
+                <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold px-2.5 py-1 rounded-md">
+                    답변 대기 질문
+                </span>
+                <span id="p-detail-author" class="text-xs text-slate-400"></span>
+            </div>
+            <h3 id="p-detail-title" class="text-xl sm:text-2xl font-bold text-slate-100 mb-4 leading-snug">
+                질문 제목
+            </h3>
+            
+            <div class="space-y-4">
+                <div class="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line bg-slate-950/60 p-5 rounded-xl border border-slate-800/80" id="p-detail-content">
+                    질문 내용
+                </div>
+
+                <!-- 작성된 답변이 있을 경우 표시하는 영역 -->
+                <div id="p-answered-content-container" class="hidden bg-emerald-950/30 border border-emerald-500/30 p-5 rounded-xl space-y-2">
+                    <h4 class="text-xs font-bold text-emerald-400 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>등록된 관리자 답변</span>
+                    </h4>
+                    <p id="p-answered-text" class="text-sm text-slate-200 leading-relaxed whitespace-pre-line"></p>
+                </div>
+
+                <!-- 첨부 파일 및 미디어 미리보기 영역 -->
+                <div id="p-detail-files-container" class="space-y-3">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+
+                <!-- 관리자 전용 답변 작성 폼 -->
+                <div id="admin-answer-section" class="hidden pt-4 border-t border-slate-800">
+                    <h4 class="text-sm font-bold text-emerald-400 mb-2 flex items-center space-x-2">
+                        <i class="fa-solid fa-reply"></i>
+                        <span>관리자 답변 작성 / 수정</span>
+                    </h4>
+                    <form onsubmit="handleAnswerPending(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">답변 작성</label>
+                            <textarea id="p-answer-text" rows="4" required placeholder="질문에 대한 답변을 입력하세요." class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors shadow-md">
+                            답변 저장 (완료 처리)
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div id="pending-admin-actions">
+                    <!-- Admin question delete button rendered via JS -->
+                </div>
+                <button onclick="closeModal('pending-detail-modal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-5 py-2 rounded-lg text-sm transition-colors">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Detail View Modal (새 창/새 탭 느낌의 상세 모달) -->
+    <div id="faq-detail-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('faq-detail-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-xl p-2 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center space-x-2 mb-3">
+                <span id="detail-category" class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-bold px-2.5 py-1 rounded-md">
+                    카테고리
+                </span>
+                <span id="detail-date" class="text-xs text-slate-500"></span>
+            </div>
+            <h3 id="detail-question" class="text-xl sm:text-2xl font-bold text-slate-100 mb-6 leading-snug border-b border-slate-800 pb-4">
+                질문 제목
+            </h3>
+            
+            <div class="space-y-4">
+                <div class="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line bg-slate-950/60 p-5 rounded-xl border border-slate-800/80 min-h-[120px]" id="detail-answer">
+                    답변 내용
+                </div>
+
+                <div id="detail-file-container" class="hidden pt-2">
+                    <h4 class="text-xs font-semibold text-slate-400 mb-2">첨부파일 및 참고자료</h4>
+                    <a id="detail-file-link" href="#" target="_blank" rel="noopener noreferrer" 
+                       class="inline-flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-slate-700 transition-colors shadow-sm">
+                        <i class="fa-solid fa-paperclip text-base"></i>
+                        <span id="detail-file-name">파일명</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div id="detail-admin-actions">
+                    <!-- Admin action buttons -->
+                </div>
+                <button onclick="closeModal('faq-detail-modal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-5 py-2 rounded-lg text-sm transition-colors">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative">
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-100 mb-1">포털 로그인</h3>
+            <p class="text-xs text-slate-400 mb-6">계정에 로그인하여 질문 작성 및 관리 기능을 이용하세요.</p>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">아이디</label>
+                    <input type="text" id="login-id" required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">비밀번호</label>
+                    <input type="password" id="login-pw" required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div id="login-error" class="text-xs text-red-400 font-medium hidden"></div>
+
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors shadow-md">
+                    로그인
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-slate-800 text-center">
+                <p class="text-xs text-slate-400">
+                    아직 계정이 없으신가요? 
+                    <button onclick="switchModal('login-modal', 'signup-modal')" class="text-indigo-400 font-bold underline hover:text-indigo-300 ml-1">
+                        회원가입하기
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative">
+            <button onclick="closeModal('signup-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-100 mb-1">신규 회원가입</h3>
+            <p class="text-xs text-slate-400 mb-6">가입 정보는 Firebase 데이터베이스에 안전하게 저장됩니다.</p>
+
+            <form onsubmit="handleSignup(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">아이디</label>
+                    <input type="text" id="signup-id" placeholder="영문/숫자 조합 4자 이상" required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">이름/닉네임</label>
+                    <input type="text" id="signup-name" placeholder="홍길동 (선생님)" required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">비밀번호</label>
+                    <input type="password" id="signup-pw" required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div id="signup-error" class="text-xs text-red-400 font-medium hidden"></div>
+
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors shadow-md">
+                    회원가입 완료
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-slate-800 text-center">
+                <p class="text-xs text-slate-400">
+                    이미 계정이 있으신가요? 
+                    <button onclick="switchModal('signup-modal', 'login-modal')" class="text-indigo-400 font-bold underline hover:text-indigo-300 ml-1">
+                        로그인으로 돌아가기
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Modal -->
+    <div id="question-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-lg w-full shadow-2xl relative">
+            <button onclick="closeModal('question-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-100 mb-1">새 질문 등록</h3>
+            <p class="text-xs text-slate-400 mb-6">등록된 질문은 작성자와 관리자만 확인이 가능하며, 답변 완료 시 FAQ로 게시됩니다.</p>
+
+            <form onsubmit="handleAddQuestion(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">질문 제목</label>
+                    <input type="text" id="q-title" placeholder="예: 한컴오피스 실행 시 라이선스 오류가 떠요" required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">상세 내용 및 현상 설명</label>
+                    <textarea id="q-content" rows="4" placeholder="어떤 상황에서 오류가 발생하는지 상세히 적어주시면 빠른 해결에 도움이 됩니다." required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">사진 및 파일 첨부 (다중 선택 가능)</label>
+                    <input type="file" id="q-file" multiple class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+                </div>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors shadow-md">
+                    질문 제출하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add FAQ Modal (Admin Only) -->
+    <div id="add-faq-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('add-faq-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-100 mb-1">신규 FAQ 항목 추가</h3>
+            <p class="text-xs text-slate-400 mb-6">관리자 전용 기능입니다.</p>
+
+            <form onsubmit="handleAddFAQ(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">카테고리</label>
+                    <select id="faq-category" class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="app_install">앱 설치</option>
+                        <option value="boancare">PCBoanCare</option>
+                        <option value="computer_use">컴퓨터 사용</option>
+                        <option value="program">프로그램</option>
+                        <option value="etc">기타</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">질문 (Question)</label>
+                    <input type="text" id="faq-title" required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">답변 (Answer)</label>
+                    <textarea id="faq-answer" rows="4" required class="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">참고자료 / 첨부파일 (다중 선택 가능)</label>
+                    <input type="file" id="faq-file" multiple class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors shadow-md">
+                    FAQ 등록하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Member Management Modal -->
+    <div id="members-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative max-h-[85vh] flex flex-col">
+            <button onclick="closeModal('members-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-100 mb-1">포털 회원 권한 관리</h3>
+            <p class="text-xs text-slate-400 mb-4">등록된 사용자 권한을 '관리자'로 승급하거나 변경할 수 있습니다.</p>
+
+            <div class="overflow-y-auto flex-1 pr-1 space-y-2" id="member-list-container">
+                <!-- Dynamic user rows rendered via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Notification Toast -->
+    <div id="toast-msg" class="fixed bottom-5 right-5 bg-slate-800 border border-slate-700 text-slate-100 px-5 py-3 rounded-xl shadow-2xl text-sm font-medium transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none z-50 flex items-center space-x-2">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-text">알림 내용</span>
+    </div>
+
+    <!-- Firebase Script Initialization -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, deleteDoc, updateDoc, onSnapshot, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnQjIgktYI3NJGfBwsvRaVjf6We-uV_vA",
+            authDomain: "school-laptop-6c1f5.firebaseapp.com",
+            projectId: "school-laptop-6c1f5",
+            storageBucket: "school-laptop-6c1f5.firebasestorage.app",
+            messagingSenderId: "596245117701",
+            appId: "1:596245117701:web:a6257a8c66f4f9b79a956c",
+            measurementId: "G-W8DT4ZC57W"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Direct Root Level Collections
+        const faqsCol = collection(db, 'faqs');
+        const pendingCol = collection(db, 'pending_questions');
+        const usersCol = collection(db, 'user_accounts');
+
+        // State Variables
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let faqsData = [];
+        let pendingData = [];
+        let membersData = [];
+        let activePendingQuestion = null;
+        let currentUser = JSON.parse(sessionStorage.getItem('edulap_current_user')) || null;
+
+        // Global functions
+        window.filterByCategory = filterByCategory;
+        window.handleSearch = handleSearch;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.switchModal = switchModal;
+        window.handleLogin = handleLogin;
+        window.handleSignup = handleSignup;
+        window.handleLogout = handleLogout;
+        window.handleAddQuestion = handleAddQuestion;
+        window.handleAddFAQ = handleAddFAQ;
+        window.handleDeleteFAQ = handleDeleteFAQ;
+        window.openFAQDetail = openFAQDetail;
+        window.openPendingDetail = openPendingDetail;
+        window.handleAnswerPending = handleAnswerPending;
+        window.handleDeletePending = handleDeletePending;
+        window.handleQuestionButtonClick = handleQuestionButtonClick;
+        window.toggleUserRole = toggleUserRole;
+        window.showToast = showToast;
+
+        // Initialize App Auth & Firestore Listeners
+        async function initApp() {
+            try {
+                await signInAnonymously(auth);
+            } catch (err) {
+                console.warn("Auth initialization error:", err);
+            }
+
+            renderUserUI();
+
+            // Realtime Sync - FAQs
+            onSnapshot(faqsCol, (snapshot) => {
+                faqsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (snapshot.empty) {
+                    seedInitialFAQs();
+                } else {
+                    renderFAQs();
+                }
+            }, (err) => {
+                console.error("Firestore FAQ error:", err);
+                document.getElementById('faq-list').innerHTML = `
+                    <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 text-center text-red-400">
+                        <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+                        <p class="font-medium text-sm">데이터베이스 연결 실패</p>
+                    </div>
+                `;
+            });
+
+            // Realtime Sync - Pending Questions
+            onSnapshot(pendingCol, (snapshot) => {
+                pendingData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderPending();
+            }, (err) => console.error("Firestore Pending Questions error:", err));
+
+            // Realtime Sync - User Accounts
+            onSnapshot(usersCol, (snapshot) => {
+                membersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderMembers();
+            }, (err) => console.error("Firestore Users error:", err));
+        }
+
+        // Seed initial FAQs if collection is empty
+        async function seedInitialFAQs() {
+            const defaultFaqs = [
+                {
+                    category: 'app_install',
+                    question: '한컴오피스/MS 오피스는 어떻게 설치하나요?',
+                    answer: '교육청 지원 사이트 접속 후 지정 계정으로 로그인하여 정품 라이선스를 다운로드받을 수 있습니다.',
+                    files: [],
+                    createdAt: Date.now()
+                },
+                {
+                    category: 'boancare',
+                    question: 'PCBoanCare 모니터링 프로그램 해제 방법은?',
+                    answer: '관리자 승인 절차 후 제어판에서 안전하게 비활성화 조치를 진행하실 수 있습니다.',
+                    files: [],
+                    createdAt: Date.now()
+                },
+                {
+                    category: 'computer_use',
+                    question: '스마트스쿨 Wi-Fi 자동 연결이 안 될 때',
+                    answer: '네트워크 설정에서 저장된 WiFi 프로필을 삭제 후 교육청 전용 SSID로 다시 연결을 시도해보세요.',
+                    files: [],
+                    createdAt: Date.now()
+                }
+            ];
+            for (const item of defaultFaqs) {
+                await addDoc(faqsCol, item);
+            }
+        }
+
+        // Helper to convert multiple files to Base64
+        async function readFilesAsDataUrl(fileList) {
+            if (!fileList || fileList.length === 0) return [];
+            const filesArray = Array.from(fileList);
+            const promises = filesArray.map(file => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve({
+                        name: file.name,
+                        url: reader.result,
+                        type: file.type
+                    });
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            });
+            return Promise.all(promises);
+        }
+
+        // Render User Auth State UI
+        function renderUserUI() {
+            const container = document.getElementById('user-info-bar');
+            const adminFaqBtn = document.getElementById('admin-add-faq-btn');
+            const adminMembersBtn = document.getElementById('admin-members-btn');
+
+            if (currentUser) {
+                const isAdmin = currentUser.role === 'admin';
+                if (isAdmin) {
+                    adminFaqBtn.classList.remove('hidden');
+                    adminMembersBtn.classList.remove('hidden');
+                } else {
+                    adminFaqBtn.classList.add('hidden');
+                    adminMembersBtn.classList.add('hidden');
+                }
+
+                container.innerHTML = `
+                    <div class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-lg border ${isAdmin ? 'border-purple-500/50 bg-purple-950/30' : 'border-slate-700'} text-xs">
+                        <i class="fa-solid ${isAdmin ? 'fa-user-shield text-purple-400' : 'fa-circle-user text-indigo-400'} text-base"></i>
+                        <div>
+                            <span class="font-bold text-slate-200">${escapeHtml(currentUser.name)}</span>
+                            ${isAdmin ? '<span class="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] px-1.5 py-0.5 rounded font-bold ml-1">관리자</span>' : ''}
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" class="text-xs text-slate-400 hover:text-slate-200 font-medium px-2 py-1">
+                        로그아웃
+                    </button>
+                `;
+            } else {
+                adminFaqBtn.classList.add('hidden');
+                adminMembersBtn.classList.add('hidden');
+                container.innerHTML = `
+                    <button onclick="openModal('login-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-lg font-semibold text-xs transition-colors shadow-md">
+                        로그인
+                    </button>
+                `;
+            }
+        }
+
+        // User Login Handler
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-id').value.trim();
+            const password = document.getElementById('login-pw').value;
+            const errorEl = document.getElementById('login-error');
+
+            errorEl.classList.add('hidden');
+
+            try {
+                const q = query(usersCol, where("username", "==", username));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    errorEl.textContent = '존재하지 않는 아이디입니다.';
+                    errorEl.classList.remove('hidden');
+                    return;
+                }
+
+                const userData = querySnapshot.docs[0].data();
+                if (userData.password !== password) {
+                    errorEl.textContent = '비밀번호가 일치하지 않습니다.';
+                    errorEl.classList.remove('hidden');
+                    return;
+                }
+
+                currentUser = {
+                    id: querySnapshot.docs[0].id,
+                    username: userData.username,
+                    name: userData.name,
+                    role: userData.role || 'user'
+                };
+
+                sessionStorage.setItem('edulap_current_user', JSON.stringify(currentUser));
+                renderUserUI();
+                renderFAQs();
+                renderPending();
+                closeModal('login-modal');
+                showToast(`환영합니다, ${currentUser.name}님!`);
+
+                document.getElementById('login-id').value = '';
+                document.getElementById('login-pw').value = '';
+            } catch (err) {
+                console.error("Login error:", err);
+                errorEl.textContent = '로그인 처리 중 오류가 발생했습니다.';
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        // User Signup Handler
+        async function handleSignup(e) {
+            e.preventDefault();
+            const username = document.getElementById('signup-id').value.trim();
+            const name = document.getElementById('signup-name').value.trim();
+            const password = document.getElementById('signup-pw').value;
+            const errorEl = document.getElementById('signup-error');
+
+            errorEl.classList.add('hidden');
+
+            if (username.length < 1) {
+                errorEl.textContent = '아이디를 입력해주세요.';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const q = query(usersCol, where("username", "==", username));
+                const existing = await getDocs(q);
+
+                if (!existing.empty) {
+                    errorEl.textContent = '이미 사용 중인 아이디입니다.';
+                    errorEl.classList.remove('hidden');
+                    return;
+                }
+
+                const isFirst = membersData.length === 0;
+                const isAdminUser = (username === 'a' && password === 'cgh0603!') || username === '.justin0603';
+                const role = (isFirst || isAdminUser) ? 'admin' : 'user';
+
+                const docRef = await addDoc(usersCol, {
+                    username,
+                    name,
+                    password,
+                    role,
+                    createdAt: Date.now()
+                });
+
+                currentUser = { id: docRef.id, username, name, role };
+                sessionStorage.setItem('edulap_current_user', JSON.stringify(currentUser));
+
+                renderUserUI();
+                renderFAQs();
+                renderPending();
+                closeModal('signup-modal');
+                showToast(`회원가입 완료! (${role === 'admin' ? '관리자 권한 부여됨' : '일반 회원'})`);
+
+                document.getElementById('signup-id').value = '';
+                document.getElementById('signup-name').value = '';
+                document.getElementById('signup-pw').value = '';
+            } catch (err) {
+                console.error("Signup error:", err);
+                errorEl.textContent = '회원가입 중 오류가 발생했습니다.';
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        // Logout
+        function handleLogout() {
+            currentUser = null;
+            sessionStorage.removeItem('edulap_current_user');
+            renderUserUI();
+            renderFAQs();
+            renderPending();
+            showToast('로그아웃 되었습니다.');
+        }
+
+        // Render FAQ Items
+        function renderFAQs() {
+            const listEl = document.getElementById('faq-list');
+            
+            let filtered = faqsData.filter(item => {
+                const matchCat = currentCategory === 'all' || item.category === currentCategory;
+                const matchQuery = !searchQuery || 
+                    item.question.toLowerCase().includes(searchQuery) || 
+                    item.answer.toLowerCase().includes(searchQuery);
+                return matchCat && matchQuery;
+            });
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `
+                    <div class="bg-slate-900 p-8 rounded-xl border border-slate-800 text-center text-slate-500">
+                        <i class="fa-solid fa-circle-exclamation text-3xl mb-2 text-slate-600"></i>
+                        <p class="font-medium text-sm">해당 조건에 맞는 FAQ 항목이 없습니다.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(item => `
+                <div onclick="openFAQDetail('${item.id}')" 
+                     class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-md hover:border-indigo-500/50 hover:bg-slate-850 transition-all cursor-pointer group flex items-center justify-between">
+                    <div class="flex items-center space-x-3 pr-4 overflow-hidden">
+                        <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-bold px-2.5 py-1 rounded-md shrink-0">
+                            ${getCategoryName(item.category)}
+                        </span>
+                        <h4 class="font-bold text-slate-200 text-sm sm:text-base group-hover:text-indigo-400 transition-colors truncate">
+                            ${escapeHtml(item.question)}
+                        </h4>
+                    </div>
+                    <div class="flex items-center space-x-2 text-xs text-indigo-400 font-semibold shrink-0 group-hover:translate-x-1 transition-transform">
+                        <span>상세보기</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Open FAQ Detail View Modal
+        function openFAQDetail(faqId) {
+            const item = faqsData.find(f => f.id === faqId);
+            if (!item) return;
+
+            document.getElementById('detail-category').textContent = getCategoryName(item.category);
+            document.getElementById('detail-date').textContent = item.createdAt ? `작성일: ${formatDate(item.createdAt)}` : '';
+            document.getElementById('detail-question').textContent = item.question;
+            document.getElementById('detail-answer').textContent = item.answer;
+
+            const fileContainer = document.getElementById('detail-file-container');
+            const files = item.files || (item.file ? [item.file] : []);
+
+            if (files.length > 0) {
+                fileContainer.innerHTML = `
+                    <h4 class="text-xs font-semibold text-slate-400 mb-2">첨부 및 이미지 자료 (${files.length})</h4>
+                    <div class="space-y-3">
+                        ${files.map(f => {
+                            const isImage = f.type && f.type.startsWith('image/');
+                            if (isImage) {
+                                return `
+                                    <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
+                                        <img src="${f.url}" alt="${escapeHtml(f.name)}" class="max-h-96 w-auto rounded-lg mx-auto object-contain">
+                                        <p class="text-[11px] text-slate-400 mt-1.5 text-center truncate">${escapeHtml(f.name)}</p>
+                                    </div>
+                                `;
+                            } else {
+                                return `
+                                    <a href="${f.url}" download="${f.name}" target="_blank" rel="noopener noreferrer" 
+                                       class="inline-flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-slate-700 transition-colors shadow-sm">
+                                        <i class="fa-solid fa-paperclip text-base"></i>
+                                        <span>${escapeHtml(f.name)}</span>
+                                    </a>
+                                `;
+                            }
+                        }).join('')}
+                    </div>
+                `;
+                fileContainer.classList.remove('hidden');
+            } else {
+                fileContainer.classList.add('hidden');
+            }
+
+            const adminActions = document.getElementById('detail-admin-actions');
+            if (currentUser && currentUser.role === 'admin') {
+                adminActions.innerHTML = `
+                    <button onclick="handleDeleteFAQ('${item.id}'); closeModal('faq-detail-modal');" 
+                            class="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center space-x-1.5 bg-red-950/40 hover:bg-red-900/50 px-3 py-2 rounded-lg border border-red-800/50 transition-colors">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>FAQ 삭제</span>
+                    </button>
+                `;
+            } else {
+                adminActions.innerHTML = '';
+            }
+
+            openModal('faq-detail-modal');
+        }
+
+        // Render Pending Questions
+        function renderPending() {
+            const listEl = document.getElementById('pending-list');
+            const countEl = document.getElementById('pending-count');
+
+            const isAdmin = currentUser && currentUser.role === 'admin';
+            const currentUserId = currentUser ? currentUser.id : null;
+            const currentUserName = currentUser ? currentUser.name : null;
+
+            const visiblePending = pendingData.filter(q => {
+                if (isAdmin) return true;
+                if (!currentUser) return false;
+                return q.authorId === currentUserId || q.author === currentUserName;
+            });
+
+            countEl.textContent = visiblePending.length;
+
+            if (!currentUser && !isAdmin) {
+                listEl.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">로그인 시 작성한 질문 목록을 확인하실 수 있습니다.</p>';
+                return;
+            }
+
+            if (visiblePending.length === 0) {
+                listEl.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">등록된 질문이 없습니다.</p>';
+                return;
+            }
+
+            listEl.innerHTML = visiblePending.map(q => {
+                const files = q.files || (q.file ? [q.file] : []);
+                const imageFiles = files.filter(f => f.type && f.type.startsWith('image/'));
+                const isAnswered = q.status === 'completed';
+                
+                return `
+                    <div onclick="openPendingDetail('${q.id}')" class="p-3.5 bg-slate-950 rounded-xl border ${isAnswered ? 'border-emerald-500/30' : 'border-slate-800'} hover:border-amber-500/40 text-xs space-y-2 cursor-pointer transition-all group">
+                        <div class="flex items-center justify-between font-bold text-slate-200">
+                            <div class="flex items-center space-x-2 truncate pr-2">
+                                <span class="${isAnswered ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border-amber-500/30'} text-[10px] font-bold px-2 py-0.5 rounded border shrink-0">
+                                    ${isAnswered ? '답변 완료' : '답변 대기'}
+                                </span>
+                                <span class="truncate group-hover:text-amber-400 transition-colors">${escapeHtml(q.title)}</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500 shrink-0">${formatDate(q.createdAt)}</span>
+                        </div>
+                        <p class="text-slate-400 line-clamp-2 leading-relaxed">${escapeHtml(q.content)}</p>
+                        
+                        ${imageFiles.length > 0 ? `
+                            <div class="grid grid-cols-2 gap-2 pt-1">
+                                ${imageFiles.slice(0, 2).map(img => `
+                                    <div class="rounded-lg overflow-hidden border border-slate-800/80 bg-slate-900 max-h-24">
+                                        <img src="${img.url}" class="w-full h-full object-cover">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+
+                        <div class="flex items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-900">
+                            <span>작성자: ${escapeHtml(q.author || '익명')}</span>
+                            <span class="text-amber-400 font-semibold group-hover:underline">클릭하여 보기 <i class="fa-solid fa-chevron-right text-[8px] ml-0.5"></i></span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Open Pending Question Detail & Answer Modal
+        function openPendingDetail(qId) {
+            const item = pendingData.find(p => p.id === qId);
+            if (!item) return;
+
+            activePendingQuestion = item;
+
+            document.getElementById('p-detail-title').textContent = item.title;
+            document.getElementById('p-detail-content').textContent = item.content;
+            document.getElementById('p-detail-author').textContent = `작성자: ${item.author || '익명'} • 작성일: ${formatDate(item.createdAt)}`;
+
+            const answeredContainer = document.getElementById('p-answered-content-container');
+            const answeredText = document.getElementById('p-answered-text');
+            if (item.status === 'completed' && item.answer) {
+                answeredText.textContent = item.answer;
+                answeredContainer.classList.remove('hidden');
+            } else {
+                answeredContainer.classList.add('hidden');
+            }
+
+            const filesContainer = document.getElementById('p-detail-files-container');
+            const files = item.files || (item.file ? [item.file] : []);
+
+            if (files.length > 0) {
+                filesContainer.innerHTML = `
+                    <h4 class="text-xs font-semibold text-slate-400 pt-2 border-t border-slate-800">첨부된 사진 및 파일 (${files.length})</h4>
+                    <div class="space-y-3">
+                        ${files.map(f => {
+                            const isImage = f.type && f.type.startsWith('image/');
+                            if (isImage) {
+                                return `
+                                    <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
+                                        <img src="${f.url}" alt="${escapeHtml(f.name)}" class="max-h-96 w-auto rounded-lg mx-auto object-contain">
+                                        <p class="text-[11px] text-slate-400 mt-1.5 text-center truncate">${escapeHtml(f.name)}</p>
+                                    </div>
+                                `;
+                            } else {
+                                return `
+                                    <a href="${f.url}" download="${f.name}" target="_blank" rel="noopener noreferrer" 
+                                       class="inline-flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-slate-700 transition-colors shadow-sm">
+                                        <i class="fa-solid fa-paperclip text-base"></i>
+                                        <span>${escapeHtml(f.name)}</span>
+                                    </a>
+                                `;
+                            }
+                        }).join('')}
+                    </div>
+                `;
+            } else {
+                filesContainer.innerHTML = '';
+            }
+
+            const adminSection = document.getElementById('admin-answer-section');
+            const pendingAdminActions = document.getElementById('pending-admin-actions');
+            
+            if (currentUser && currentUser.role === 'admin') {
+                adminSection.classList.remove('hidden');
+                document.getElementById('p-answer-text').value = item.answer || '';
+
+                pendingAdminActions.innerHTML = `
+                    <button onclick="handleDeletePending('${item.id}')" 
+                            class="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center space-x-1.5 bg-red-950/40 hover:bg-red-900/50 px-3 py-2 rounded-lg border border-red-800/50 transition-colors">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>질문 삭제</span>
+                    </button>
+                `;
+            } else {
+                adminSection.classList.add('hidden');
+                pendingAdminActions.innerHTML = '';
+            }
+
+            openModal('pending-detail-modal');
+        }
+
+        async function handleAnswerPending(e) {
+            e.preventDefault();
+            if (!activePendingQuestion) return;
+
+            const answerText = document.getElementById('p-answer-text').value.trim();
+            if (!answerText) return;
+
+            try {
+                await updateDoc(doc(db, 'pending_questions', activePendingQuestion.id), {
+                    status: 'completed',
+                    answer: answerText,
+                    answeredAt: Date.now()
+                });
+
+                closeModal('pending-detail-modal');
+                activePendingQuestion = null;
+                showToast('답변이 완료 상태로 저장되었습니다.');
+            } catch (err) {
+                console.error("Answer pending error:", err);
+                showToast('답변 저장 실패', 'error');
+            }
+        }
+
+        async function handleDeletePending(docId) {
+            if (!confirm('이 대기 질문을 삭제하시겠습니까?')) return;
+            try {
+                await deleteDoc(doc(db, 'pending_questions', docId));
+                closeModal('pending-detail-modal');
+                activePendingQuestion = null;
+                showToast('질문이 삭제되었습니다.');
+            } catch (err) {
+                console.error("Delete pending error:", err);
+                showToast('삭제 실패', 'error');
+            }
+        }
+
+        function handleQuestionButtonClick() {
+            if (!currentUser) {
+                showToast('질문 작성 기능은 로그인 후 이용하실 수 있습니다.', 'error');
+                openModal('login-modal');
+                return;
+            }
+            openModal('question-modal');
+        }
+
+        function renderMembers() {
+            const container = document.getElementById('member-list-container');
+            if (!container) return;
+
+            if (membersData.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-500 text-center py-6">가입된 회원이 없습니다.</p>';
+                return;
+            }
+
+            container.innerHTML = membersData.map(m => {
+                const isAdmin = m.role === 'admin';
+                return `
+                    <div class="flex items-center justify-between p-3.5 bg-slate-950 rounded-xl border border-slate-800 text-xs">
+                        <div class="space-y-0.5">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-slate-200 text-sm">${escapeHtml(m.name)}</span>
+                                <span class="text-slate-500 text-xs">(@${escapeHtml(m.username)})</span>
+                            </div>
+                            <p class="text-slate-400 text-[11px]">가입일: ${formatDate(m.createdAt)}</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="${isAdmin ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' : 'bg-slate-800 text-slate-400 border-slate-700'} border text-[10px] font-bold px-2 py-0.5 rounded">
+                                ${isAdmin ? '관리자' : '일반 회원'}
+                            </span>
+                            <button onclick="toggleUserRole('${m.id}', '${m.role}')" 
+                                    class="${isAdmin ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' : 'bg-indigo-600 hover:bg-indigo-500 text-white'} px-3 py-1.5 rounded-lg font-semibold transition-colors">
+                                ${isAdmin ? '관리자 해제' : '관리자로 승급'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function toggleUserRole(docId, currentRole) {
+            const nextRole = currentRole === 'admin' ? 'user' : 'admin';
+            try {
+                await updateDoc(doc(db, 'user_accounts', docId), { role: nextRole });
+                showToast(`회원 권한이 '${nextRole === 'admin' ? '관리자' : '일반 회원'}'(으)로 변경되었습니다.`);
+            } catch (err) {
+                console.error("Role update error:", err);
+                showToast('권한 변경에 실패했습니다.', 'error');
+            }
+        }
+
+        async function handleAddQuestion(e) {
+            e.preventDefault();
+            const title = document.getElementById('q-title').value.trim();
+            const content = document.getElementById('q-content').value.trim();
+            const fileInput = document.getElementById('q-file');
+
+            if (!title || !content) return;
+
+            try {
+                let fileList = [];
+                if (fileInput.files.length > 0) {
+                    fileList = await readFilesAsDataUrl(fileInput.files);
+                }
+
+                await addDoc(pendingCol, {
+                    title,
+                    content,
+                    files: fileList,
+                    authorId: currentUser ? currentUser.id : null,
+                    author: currentUser ? currentUser.name : '익명 사용자',
+                    createdAt: Date.now()
+                });
+
+                document.getElementById('q-title').value = '';
+                document.getElementById('q-content').value = '';
+                fileInput.value = '';
+                closeModal('question-modal');
+                showToast('질문이 성공적으로 제출되었습니다. (작성자와 관리자만 볼 수 있습니다)');
+            } catch (err) {
+                console.error("Add question error:", err);
+                showToast('질문 등록 실패', 'error');
+            }
+        }
+
+        async function handleAddFAQ(e) {
+            e.preventDefault();
+            const category = document.getElementById('faq-category').value;
+            const question = document.getElementById('faq-title').value.trim();
+            const answer = document.getElementById('faq-answer').value.trim();
+            const fileInput = document.getElementById('faq-file');
+
+            try {
+                let fileList = [];
+                if (fileInput.files.length > 0) {
+                    fileList = await readFilesAsDataUrl(fileInput.files);
+                }
+
+                await addDoc(faqsCol, {
+                    category,
+                    question,
+                    answer,
+                    files: fileList,
+                    createdAt: Date.now()
+                });
+
+                document.getElementById('faq-title').value = '';
+                document.getElementById('faq-answer').value = '';
+                fileInput.value = '';
+                closeModal('add-faq-modal');
+                showToast('새 FAQ 항목이 추가되었습니다.');
+            } catch (err) {
+                console.error("Add FAQ error:", err);
+                showToast('FAQ 추가 실패', 'error');
+            }
+        }
+
+        async function handleDeleteFAQ(docId) {
+            if (!confirm('이 FAQ 항목을 삭제하시겠습니까?')) return;
+            try {
+                await deleteDoc(doc(db, 'faqs', docId));
+                showToast('FAQ 항목이 삭제되었습니다.');
+            } catch (err) {
+                console.error("Delete FAQ error:", err);
+                showToast('삭제 실패', 'error');
+            }
+        }
+
+        function filterByCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = "cat-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap shadow-sm transition-all";
+                } else {
+                    btn.className = "cat-btn bg-slate-900 hover:bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium border border-slate-800 whitespace-nowrap transition-all";
+                }
+            });
+            renderFAQs();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+            renderFAQs();
+        }
+
+        function getCategoryName(cat) {
+            const map = {
+                app_install: '앱 설치',
+                boancare: 'PCBoanCare',
+                computer_use: '컴퓨터 사용',
+                program: '프로그램',
+                etc: '기타'
+            };
+            return map[cat] || '기타';
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return '';
+            const d = new Date(timestamp);
+            return `${d.getMonth() + 1}/${d.getDate()}`;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, match => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[match]));
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function switchModal(fromId, toId) {
+            closeModal(fromId);
+            openModal(toId);
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast-msg');
+            const toastText = document.getElementById('toast-text');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastText.textContent = msg;
+            if (type === 'error') {
+                toastIcon.className = 'fa-solid fa-circle-xmark text-red-400';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
