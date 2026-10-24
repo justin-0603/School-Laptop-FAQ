@@ -480,13 +480,13 @@
         import { getFirestore, doc, deleteDoc, updateDoc, onSnapshot, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyBnQjIgktYI3NJGfBwsvRaVjf6We-uV_vA",
-            authDomain: "school-laptop-6c1f5.firebaseapp.com",
-            projectId: "school-laptop-6c1f5",
-            storageBucket: "school-laptop-6c1f5.firebasestorage.app",
-            messagingSenderId: "596245117701",
-            appId: "1:596245117701:web:a6257a8c66f4f9b79a956c",
-            measurementId: "G-W8DT4ZC57W"
+            apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+            authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+            projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+            storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+            appId: import.meta.env.VITE_FIREBASE_APP_ID,
+            measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
         };
 
         // Initialize Firebase
